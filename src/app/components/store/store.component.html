@@ -1,0 +1,101 @@
+<!-- Acciones del componente -->
+<div class="row">
+  <div class="col-11">
+
+  </div>
+  <div class="col-1">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create_or_edit_store">Crear</button>
+    <!--
+    <button type="button" class="btn btn-danger">Editar</button>
+    <button type="button" class="btn btn-warning">Eliminar</button>
+    -->
+  </div>    
+</div>
+
+<!-- Tabla del componente -->
+<table class="table table-hover mt-3">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Ubicación</th>
+      <th scope="col">Inventario</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody class="text-light">
+    <tr *ngFor="let store of listStore | paginate: { itemsPerPage: 10, currentPage: p }; let i = index">
+      <th scope="row">{{ store.id }}</th>
+      <td>{{ store.name }}</td>
+      <td>{{ store.direction }}</td>
+      <td style="cursor: pointer" (click)="filterInventoryByStore.emit(store)">Ver inventario</td>
+      <td>
+        <i class="material-icons mr-3" style="cursor: pointer" (click)="selectItem(store, i)" data-toggle="modal" data-target="#create_or_edit_store">edit</i>
+        <i class="material-icons" style="cursor: pointer" (click)="selectItem(store, i)" data-toggle="modal" data-target="#delete_store" data-backdrop="static" data-keyboard="false">delete</i>
+      </td>
+    </tr>    
+  </tbody>  
+</table>
+<div class="row d-flex justify-content-center">
+  <ul class="pagination">  
+    <pagination-controls 
+      (pageChange)="p = $event" 
+      previousLabel="Anterior"
+      nextLabel="Siguiente">
+    </pagination-controls>  
+  </ul>  
+</div>  
+
+<!-- Modal Crear -->
+<div #modal class="modal fade" id="create_or_edit_store" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Crear Tienda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="text-light">
+          <div class="form-row">
+            <label for="inputEmail4">Nombre</label>
+            <input type="text" class="form-control" id="inputEmail4" placeholder="Nombre de la tienda" [(ngModel)]="storeNew.name" [ngModelOptions]="{standalone: true}">
+          </div>
+          <div class="form-group">
+            <label for="inputAddress">Dirección</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="Dirección de la tienda" [(ngModel)]="storeNew.direction" [ngModelOptions]="{standalone: true}">
+          </div>          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-modal-store">Cerrar</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="storeNew.id == 0">Crear</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="storeNew.id != 0">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div #modal_delete class="modal fade" id="delete_store" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" bg-close="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Eliminar Tienda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal-store">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-light">
+          ¿Estas seguro de eliminar esta tienda {{ storeNew.name }}?
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="deleteCancel()">No</button>
+        <button type="button" class="btn btn-dark" data-dismiss="modal" (click)="deleteElement()">Si</button>        
+      </div>
+    </div>
+  </div>
+</div>

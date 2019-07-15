@@ -1,0 +1,117 @@
+<!-- Acciones del componente -->
+<div class="row">
+  <div class="col-11">
+
+  </div>
+  <div class="col-1">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create_or_edit_inventory">Crear</button>
+  </div>    
+</div>
+
+<!-- Tabla del componente -->
+<table class="table table-hover mt-3">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Tienda</th>
+      <th scope="col">Producto</th>
+      <th scope="col">Cantidad</th>
+      <th scope="col">Fecha de compra</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody class="text-light">
+    <tr *ngFor="let item of list | paginate: { itemsPerPage: 10, currentPage: p }; let i = index">
+      <th scope="row">{{ item.id }}</th>      
+      <td>{{ item.store.name }}</td>
+      <td>{{ item.product.name }}</td>
+      <td>{{ item.quantity }}</td>
+      <td>{{ item.date_buy.year }}-{{ item.date_buy.month }}-{{ item.date_buy.day }}</td>
+      <td>
+        <i class="material-icons mr-3" style="cursor: pointer" (click)="selectItem(item, i)" data-toggle="modal" data-target="#create_or_edit_inventory">edit</i>
+        <i class="material-icons"  style="cursor: pointer" (click)="selectItem(item, i)" data-toggle="modal" data-target="#delete_inventory" data-backdrop="static" data-keyboard="false">delete</i>
+      </td>
+    </tr>    
+  </tbody>
+</table>
+<div class="row d-flex justify-content-center">
+  <ul class="pagination">  
+    <pagination-controls 
+      (pageChange)="p = $event" 
+      previousLabel="Anterior"
+      nextLabel="Siguiente">
+    </pagination-controls>  
+  </ul>  
+</div> 
+
+<!-- Modal Crear -->
+<div #modal class="modal fade" id="create_or_edit_inventory" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Registrar nuevo inventario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="text-light">
+          <div class="form-row">
+            <label for="selectProvider">Tienda</label>
+            <select id="selectProvider" class="form-control" [(ngModel)]="objectNew.store" [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let item of listStore; let i = index" [ngValue]="item">{{ item.name }}</option>        
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="selectProvider">Producto</label>
+            <select id="selectProvider" class="form-control" [(ngModel)]="objectNew.product" [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let item of listProduct; let i = index" [ngValue]="item">{{ item.name }}</option>        
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Cantidad</label>
+            <input type="number" class="form-control" id="inputEmail4" placeholder="Cantidad" [(ngModel)]="objectNew.quantity" [ngModelOptions]="{standalone: true}">
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Fecha de compra</label>
+            <input class="form-control col-11" placeholder="yyyy-mm-dd"
+             name="dp" [(ngModel)]="objectNew.date_buy" ngbDatepicker #d="ngbDatepicker">
+            <div class="input-group-append col-1">
+              <button class="btn btn-dark calendar" (click)="d.toggle()" type="button">
+                <i class="material-icons" style="font-size: 15px !important;">date_range</i>    
+              </button>
+            </div>            
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-modal-store">Cerrar</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="objectNew.id == 0">Crear</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="objectNew.id != 0">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div #modal_delete class="modal fade" id="delete_inventory" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" bg-close="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Eliminar registro de inventario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal-store">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-light">
+          ¿Estas seguro de eliminar este registro?
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="deleteCancel()">No</button>
+        <button type="button" class="btn btn-dark" data-dismiss="modal" (click)="deleteElement()">Si</button>        
+      </div>
+    </div>
+  </div>
+</div>

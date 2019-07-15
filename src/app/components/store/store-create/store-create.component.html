@@ -1,0 +1,30 @@
+<!-- Modal Crear -->
+<div #modal class="modal fade" id="create_or_edit_store" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Crear Tienda</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="text-light">
+          <div class="form-row">
+            <label for="inputEmail4">Nombre</label>
+            <input type="text" class="form-control" id="inputEmail4" placeholder="Nombre de la tienda" [(ngModel)]="storeNew.name" [ngModelOptions]="{standalone: true}">
+          </div>
+          <div class="form-group">
+            <label for="inputAddress">Dirección</label>
+            <input type="text" class="form-control" id="inputAddress" placeholder="Dirección de la tienda" [(ngModel)]="storeNew.direction" [ngModelOptions]="{standalone: true}">
+          </div>          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="storeNew.id == 0">Crear</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="storeNew.id != 0">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>

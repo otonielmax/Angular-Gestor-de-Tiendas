@@ -1,0 +1,103 @@
+<!-- Acciones del componente -->
+<div class="row">
+  <div class="col-11">
+
+  </div>
+  <div class="col-1">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create_or_edit_product">Crear</button>
+  </div>    
+</div>
+
+<!-- Tabla del componente -->
+<table class="table table-hover mt-3">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Proveedor</th>
+      <th scope="col">Precio</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody class="text-light">
+    <tr *ngFor="let item of list | paginate: { itemsPerPage: 10, currentPage: p }; let i = index">
+      <th scope="row">{{ item.id }}</th>
+      <td>{{ item.name }}</td>
+      <td>{{ item.provider.name }}</td>
+      <td>{{ item.price }}</td>
+      <td>
+        <i class="material-icons mr-3" style="cursor: pointer" (click)="selectItem(item, i)" data-toggle="modal" data-target="#create_or_edit_product">edit</i>
+        <i class="material-icons" style="cursor: pointer" (click)="selectItem(item, i)" data-toggle="modal" data-target="#delete_product" data-backdrop="static" data-keyboard="false">delete</i>
+      </td>
+    </tr>    
+  </tbody>
+</table>
+<div class="row d-flex justify-content-center">
+  <ul class="pagination">  
+    <pagination-controls 
+      (pageChange)="p = $event" 
+      previousLabel="Anterior"
+      nextLabel="Siguiente">
+    </pagination-controls>  
+  </ul>  
+</div> 
+
+<!-- Modal Crear -->
+<div #modal class="modal fade" id="create_or_edit_product" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Crear Producto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="text-light">
+          <div class="form-row">
+            <label for="selectProvider">Proveedor</label>
+            <select id="selectProvider" class="form-control" [(ngModel)]="objectNew.provider" [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let item of listProvider; let i = index" [ngValue]="item">{{ item.name }}</option>        
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Nombre</label>
+            <input type="text" class="form-control" id="inputEmail4" placeholder="Nombre del proveedor" [(ngModel)]="objectNew.name" [ngModelOptions]="{standalone: true}">
+          </div>
+          <div class="form-row">
+            <label for="inputEmail4">Precio</label>
+            <input type="number" class="form-control" id="inputEmail4" placeholder="Precio" [(ngModel)]="objectNew.price" [ngModelOptions]="{standalone: true}">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close-modal-store">Cerrar</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="objectNew.id == 0">Crear</button>
+        <button type="button" class="btn btn-dark" (click)="createOrEdit()" *ngIf="objectNew.id != 0">Modificar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div #modal_delete class="modal fade" id="delete_product" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" bg-close="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-light" id="exampleModalLongTitle">Eliminar Producto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close-modal-store">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-light">
+          ¿Estas seguro de eliminar el producto {{ objectNew.name }}?
+        </h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="deleteCancel()">No</button>
+        <button type="button" class="btn btn-dark" data-dismiss="modal" (click)="deleteElement()">Si</button>        
+      </div>
+    </div>
+  </div>
+</div>
